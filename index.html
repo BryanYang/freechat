@@ -1,0 +1,750 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Free Chat</title>
+    <meta charset="utf-8" />
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body {
+        font: 13px Helvetica, Arial;
+    }
+    #login,
+    #main {
+        height: 600px;
+        width: 800px;
+        box-sizing: content-box;
+        font-family: Microsoft Yahei;
+        display: none;
+        overflow: hidden;
+    }
+    #main button {
+        width: 800px;
+        height: 600px;
+        border: none;
+    }
+    #messages {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+    #messages li {
+        padding: 5px 10px;
+    }
+    #messages li:nth-child(odd) {
+        background: #eee;
+    }
+    #left {
+        width: 50px;
+        background-color: rgb(16, 16, 16);
+        position: absolute;
+        z-index: 2;
+        height: 600px;
+    }
+    #myPic {
+        height: 35px;
+        width: 35px;
+        margin: 5px;
+    }
+    #middle {
+        width: 200px;
+        background-color: rgb(40, 40, 40);
+        color: rgb(87, 87, 87);
+        margin-left: 50px;
+    }
+    .online .line_tag {
+        background-color: rgb(0, 190, 0);
+    }
+    .online {
+        color: rgb(237, 237, 237);
+    }
+    .u_container {
+        height: 50px;
+    }
+    .u_container img {
+        height: 40px;
+        width: 40px;
+        margin: 5px;
+        float: left;
+    }
+    .u_container:hover {
+        background-color: rgb(105, 105, 105);
+        color: white;
+    }
+    .new_msg {
+        background-color: rgb(207, 187, 124);
+    }
+    .u_name {
+        line-height: 30px;
+        font-size: 20px;
+    }
+    .u_location {
+        font-size: 10px;
+    }
+    .line_tag {
+        height: 40px;
+        width: 10px;
+        float: left;
+        background-color: rgb(123, 123, 123);
+        margin: 5px 0;
+    }
+    #right {
+        width: 550px;
+        background-color: rgb(226, 226, 226);
+    }
+    #main > div {
+        float: left;
+        height: 100%;
+    }
+    #title {
+        height: 5%;
+        background-color: rgb(244, 244, 244);
+        border-bottom: 1px solid rgb(232, 232, 232);
+    }
+    #title h3 {
+        text-align: center;
+        color: rgb(181, 181, 181);
+        font-weight: 100;
+        line-height: 30px;
+    }
+    #title .drag {
+        height: 100%;
+        width: 500px;
+        float: left;
+        padding-left: 25px;
+    }
+    #msg {
+        height: 65%;
+        background-color: rgb(244, 244, 244);
+        overflow: auto;
+        padding-top: 10px;
+    }
+    #msg li {
+        list-style: none;
+        padding: 0 10px;
+    }
+    #msg > li >img {
+        height: 35px;
+        width: 35px;
+        border-radius: 10px;
+        -webkit-border-radius: 10px;
+    }
+    #msg>li >span {
+        line-height: 20px;
+        display: inline-block;
+        padding: 5px;
+        margin: 10px;
+        position: relative;
+        top: -10px;
+    }
+    .msg_me span {
+        background-color: rgb(174, 234, 164);
+    }
+    .msg_me img {} .msg_me {
+        text-align: right;
+    }
+    .msg_other span {
+        background-color: white;
+    }
+    #input {
+        height: 30%;
+        background-color: rgb(244, 244, 244);
+        border-top: 1px solid rgb(213, 213, 213);
+    }
+    #input:focus {
+        background-color: white;
+    }
+    #right div {
+        *width: 100%;
+    }
+    #input_tool {
+        height: 29px;
+    }
+    #input_text {
+        height: 120px;
+    }
+    #send {
+        height: 30px;
+        text-align: right;
+    }
+    #text {
+        height: 100%;
+        width: 100%;
+        font-family: Microsoft Yahei;
+        font-size: 1.1em;
+        border: none;
+        outline: medium;
+        background-color: rgb(244, 244, 244);
+    }
+    #text:focus {
+        background-color: white;
+    }
+    #sentBtn {
+        margin-right: 20px;
+        width: 50px;
+        height: 25px;
+        background-color: rgb(218, 218, 218);
+        border: none;
+        font-family: Microsoft Yahei;
+    }
+    #sentBtn:hover {
+        background-color: white;
+    }
+    #login .top_half,
+    #login .bottom_half {
+        height: 50%
+    }
+    .top_half {
+        background-color: rgb(76, 184, 231);
+    }
+    #login input {
+        position: relative;
+        height: 40px;
+        width: 200px;
+        left: 300px;
+        font-size: 20px;
+        border-radius: 6px;
+        border: none;
+        text-align: center;
+        -webkit-transition: box-shadow 0.30s ease-in-out;
+        font-family: Microsoft Yahei;
+        opacity: 0;
+    }
+    .top_half input {
+        top: 48px;
+    }
+    .top_half h1 {
+        color: white;
+        text-align: center;
+        font-size: 80px;
+        position: relative;
+        top: 50px;
+    }
+    .top_half input:focus {
+        outline: none;
+        border: #87C6F9 1px solid;
+        box-shadow: 0 0 8px white;
+    }
+    .bottom_half input {
+        top: 10px;
+        background-color: rgb(76, 184, 231);
+        color: white;
+    }
+    .bottom_half input:hover {
+        outline: none;
+        border: #87C6F9 1px solid;
+        box-shadow: 0 0 8px gray;
+    }
+    .bottom_half {
+        background-color: rgb(252, 252, 252);
+    }
+    .bottom_half div {
+        text-align: center;
+        position: relative;
+        top: 240px;
+        color: rgb(168, 168, 168);
+    }
+    .login_drag {
+        height: 200px;
+        width: 700px;
+        padding-left: 50px;
+    }
+    .dragable {
+        -webkit-app-region: drag;
+    }
+    .login_winBtn {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+    }
+    b.x {
+        display: inline-block;
+        width: 15px;
+        height: 2px;
+        background: gray;
+        font-size: 0;
+        line-height: 0;
+        vertical-align: middle;
+        -webkit-transform: rotate(45deg);
+    }
+    b.x:after {
+        content: '.';
+        display: block;
+        width: 15px;
+        height: 2px;
+        background: gray;
+        -webkit-transform: rotate(-90deg);
+    }
+    b._ {
+        display: inline-block;
+        width: 12px;
+        height: 2px;
+        background: gray;
+        font-size: 0;
+        line-height: 0;
+        vertical-align: bottom;
+    }
+    div._:hover,
+    div.x:hover {
+        background: white;
+    }
+    div._,
+    div.x {
+        height: 20px;
+        width: 20px;
+        float: left;
+        text-align: center;
+    }
+    .transparency {
+        opacity: 0;
+    }
+    .setting {
+        display: inline-block;
+        height: 35px;
+        width: 35px;
+        margin: 5px;
+        position: relative;
+        top: 500px;
+    }
+    #setPanel {
+        width: 400px;
+        z-index: 1;
+        font-size: 1.1em;
+        left: -400px;
+        position: absolute;
+        background-color: rgba(242, 242, 242, 0.97);
+        overflow: hidden;
+        box-shadow: rgb(210, 210, 210) 1px 2px 10px;
+    }
+    #setPanel > div {
+        margin: 20px;
+    }
+    .set_title {
+        text-align: center;
+    }
+    .set_content .lable {
+        width: 70px;
+        text-align: right;
+        float: left;
+    }
+    .set_content .content {
+        width: 250px;
+        float: left;
+        border-top: 1px rgb(197, 197, 197) solid;
+        box-sizing: border-box;
+        padding: 5px;
+        margin: 10px;
+    }
+    .set_content .music_cd {
+        height: 100px;
+        width: 100px;
+        border-radius: 50px;
+        margin: 30px auto;
+        border: 2px white solid;
+        box-shadow: rgb(234, 234, 234) 1px 1px 1px 1px;
+        background: url('http://a.hiphotos.baidu.com/ting/pic/item/0dd7912397dda144df7fa1cbb0b7d0a20cf48651.jpg')
+    }
+    </style>
+    <link href="public/animate.css" type="text/css" rel='stylesheet' />
+    <script src="public/socket.io.js"></script>
+    <script src="public/jquery.js"></script>
+    <script src="public/lodash.min.js"></script>
+    <script>
+    function User(name, img) {
+        this.name = name;
+        this.img = img;
+    }
+
+    var socket = io("http://111.206.74.131:3000");
+
+    var gui, win = null;
+    if (typeof(require) != 'undefined') {
+        gui = require('nw.gui');
+        win = gui.Window.get();
+    }
+
+
+
+    function untitity() {
+
+        this.getObj = function(str) {
+            var o = localStorage.getItem(str);
+            if (!o) {
+                return null;
+            } else {
+                return JSON.parse(o);
+            }
+        }
+
+        this.setObj = function(str, obj) {
+            var strObj = JSON.stringify(obj);
+            localStorage.setItem(str, strObj);
+        }
+
+        this.getStr = function(str) {
+            var o = localStorage.getItem(str);
+            if (!o) {
+                return null;
+            } else {
+                return o;
+            }
+        }
+
+        this.getInt = function() {
+            var o = localStorage.getItem(str);
+            if (!o) {
+                return null;
+            } else {
+                return Number(o);
+            }
+        }
+
+        this.diff = function(arr1, arr2, compare) {
+            var result = [];
+            _.forEach(arr1, function(a) {
+                var isSame = _.some(arr2, function(b) {
+                    return compare(a, b);
+                })
+
+                if (!isSame) {
+                    result.push(a);
+                }
+            })
+
+            return result;
+        }
+    }
+
+    var uti = new untitity();
+
+    function myAnimate(e, x) {
+        $(e).removeClass().addClass(x + ' animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
+            $(this).removeClass();
+            $('#login input').addClass('fadeIn animated');
+            $('.winBtn div').addClass('zoomIn animated');
+        });
+    };
+
+
+    function init(socket) {
+        var $login = $('#login');
+        var $main = $('#main');
+
+        var user = uti.getObj('user');
+        if (!user) {
+            $login.show();
+            myAnimate('#appName', 'rollIn');
+        } else {
+            $main.show();
+            $('#myPic').attr('src', user.img || 'img/none.jpg');
+            $('#myPic').attr('title', user.name);
+            socket.emit('online_user', user);
+        }
+    }
+
+    function login() {
+        var $login = $('#login');
+        var $main = $('#main');
+        var uname = $('.top_half input').val();
+        if (uname == '') {
+            return false;
+        }
+        user = new User(uname, 'img/pic' + Math.floor(Math.random() * 6 + 1) + '.jpg');
+        uti.setObj("user", user);
+        $login.hide();
+        $main.show();
+
+        $('#myPic').attr('src', user.img || 'img/none.jpg');
+        $('#myPic').attr('title', user.name);
+        socket.emit('online_user', user);
+    }
+
+    function playSound(name) {
+        var src = musicList[name];
+        var _s = document.getElementById('snd');
+        if (src != '' && typeof src != undefined) {
+            _s.src = src;
+        }
+        _s.play();
+    }
+
+
+
+    function userHtml(u) {
+        u = u.user;
+        var container = $('<div>', {
+            'class': 'u_container',
+            id: 'u_' + u.name
+        });
+        $('<div>', {
+            'class': 'line_tag'
+        }).appendTo(container);
+        $('<img>', {
+            src: u.img || 'img/none.jpg'
+        }).appendTo(container);
+        $('<div>', {
+            'class': 'u_name'
+        }).html(u.name).appendTo(container);
+        $('<div>', {
+            'class': 'u_location'
+        }).html('中国').appendTo(container);
+        return container;
+    }
+
+    function msgHtml(msg) {
+        //我发的消息的样式
+        if (msg.from.name == uti.getObj('user').name) {
+            return $('<li>', {
+                'class': 'msg_me'
+            }).append('<span>' + msg.msg + '</span>').append($('<img>', {
+                src: msg.from.img
+            }));
+        }
+        //别人消息样式
+        else {
+            return $('<li>', {
+                'class': 'msg_other'
+            }).append($('<img>', {
+                src: msg.from.img
+            })).append('<span>' + msg.msg + '</span>');
+        }
+    }
+
+    function enterDown(event) {
+        event.preventDefault();
+        $('#sentBtn').click();
+    }
+
+    //为元素绑定事件
+    function bindElementEvent() {
+        var minBtn = $('div._');
+        var closeBtn = $('div.x');
+
+        minBtn.click(function() { 
+            win.minimize();
+        });
+
+        closeBtn.click(function() {
+            win.close();
+        })
+
+        $('a.setting').click(function() {
+            var chilun = $(this).find('img');
+            var setP = $('#setPanel');
+            var class1 = setP.hasClass('extend') ? 'extend' : 'contract';
+            var class2 = setP.hasClass('extend') ? 'contract' : 'extend';
+            setP.removeClass(class1).addClass(class2);
+            var class3 = setP.hasClass('extend') ? 'circle_aw' : 'circle_cw';
+            var class4 = setP.hasClass('extend') ? 'circle_cw' : 'circle_aw';
+            chilun.removeClass(class3).addClass(class4);
+
+        })
+
+        $('div.music_cd').click(function(event) {
+            var myCD = $('#myCD');
+            if (myCD.get(0).paused) {
+                if (!myCD.attr('src')) {
+                    myCD.attr('src', 'audio/qingchun.wav');
+                }
+                myCD.get(0).play();
+                $(this).addClass('music_playing');
+
+            } else {
+                myCD.get(0).pause();
+                $(this).removeClass('music_playing');
+            }
+
+
+        });
+    }
+
+    var currentChat = null;
+    var chatMsgs = {};
+    var msgQueue = {};
+    var userList = [];
+    var musicList = {
+        msg_other: 'audio/msg_other.wav',
+        msg_me: 'audio/msg_me.mp3'
+    }
+
+    $(function() {
+
+        init(socket);
+        bindElementEvent();
+
+        socket.on("online_user", function(users) {
+            var compareUser = function(u1, u2) {
+                return u1.user.name == u2.user.name
+            }
+
+            users = _.filter(users, function(u) {
+                return u.user.name != uti.getObj('user').name;
+            })
+
+            var newu = uti.diff(users, userList, compareUser);
+            var offline = uti.diff(userList, users, compareUser);
+
+            _.forEach(newu, function(u) {
+                $('#middle').append(userHtml(u));
+                userList.push(u);
+            })
+
+            _.forEach(users, function(u) {
+                $('#u_' + u.user.name).addClass('online');
+
+            })
+
+            _.forEach(offline, function(u) {
+                $('#u_' + u.user.name).removeClass('online');
+            })
+        })
+
+        socket.on('chat message', function(msg) {
+            $('#msg').append($('<li>').text(msg));
+        });
+
+        socket.on('personal', function(msgBody) {
+            var chat_msg = msgHtml(msgBody);
+            //如果消息是对方回复的消息，或者是我刚发出的消息，则直接填到页面上。
+            if (currentChat == msgBody.from.name || currentChat == msgBody.to) {
+                $('#msg').append(chat_msg);
+                $('#msg').get(0).scrollTop = $('#msg').get(0).scrollHeight;
+
+            } else {
+                $('#u_' + msgBody.from.name).addClass('new_msg');
+                msgQueue[msgBody.from.name] = msgQueue[msgBody.from.name] || [];
+                msgQueue[msgBody.from.name].push(msgBody);
+            }
+
+            if (msgBody.from.name != uti.getObj('user').name) {
+                playSound('msg_other');
+            }
+
+
+        });
+
+        $('#middle').delegate('div.u_container', 'click', function() {
+            var selectedUser = $(this).attr('id').split('_')[1];
+            var $msg = $('#msg');
+            var $title = $('#title .drag');
+            $(this).removeClass('new_msg');
+
+            if (currentChat == selectedUser) {
+
+            } else {
+                $title.html('<h3>' + selectedUser + '</h3>');
+                if (currentChat) chatMsgs[currentChat] = $msg.html();
+                currentChat = selectedUser;
+                //填入旧消息
+                $msg.html(chatMsgs[currentChat] || '');
+                //生成消息队列中的消息
+                if (msgQueue[currentChat] && msgQueue[currentChat].length > 0) {
+                    _.forEach(msgQueue[currentChat], function(m) {
+                        $msg.append(msgHtml(m));
+                    })
+                    $msg.get(0).scrollTop = $msg.get(0).scrollHeight
+                    msgQueue[currentChat] = [];
+                }
+            }
+        })
+
+        $('#sentBtn').click(function() {
+            if ($('#text').val().length == 0) {
+                return false;
+            }
+            if (currentChat != null) {
+
+                socket.emit('personal', {
+                    from: uti.getObj('user'),
+                    to: currentChat,
+                    msg: $('#text').val()
+                });
+            }
+            $('#text').val('');
+            return false;
+        });
+
+    })
+    </script>
+</head>
+
+<body>
+    <audio id="snd" src=""></audio>
+    <div id="main">
+        <div id="left" style="height:600px">
+            <img id="myPic" />
+            <a class="setting animated"><img src="img/setting.png" />
+            </a>
+        </div>
+        <div id="setPanel" class="animated" style="height:600px">
+            <div class="set_title">设置</div>
+            <div class="set_content">
+                <div class="lable">声音</div>
+                <div class="content"></div>
+            </div>
+            <div class="set_content">
+                <div class="lable">一起Music</div>
+                <div class="content">
+                    <div class="music_cd">
+                        <audio id="myCD" />
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div id="middle">
+        </div>
+        <div id="right">
+            <div id="title">
+                <div class="dragable drag"></div>
+                <div style="padding-top:3px">
+                    <div class="_"> <b class="_" title="缩小"></b>
+                    </div>
+                    <div class="x"> <b class="x" title="关闭"></b>
+                    </div>
+                </div>
+            </div>
+            <div id="msg">
+                <p style="text-align: center;font-size: 1.6em;color: rgba(0, 0, 0, 0.4);">点击左侧在线用户开始聊天</p>
+            </div>
+            <div id="input">
+                <div id="input_tool"></div>
+                <div id="input_text">
+                    <textarea id="text" onkeydown='if(event.keyCode==13){enterDown(event)}'></textarea>
+                </div>
+                <div id="send">
+                    <span style="color:rgb(163, 163, 163)">回车</span>
+                    <input type="button" id="sentBtn" value="发送" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div id="login">
+        <div class="top_half">
+            <div class="login_drag dragable">
+                <h1 id="appName">Free Chat</h1>
+            </div>
+            <div class="winBtn login_winBtn">
+                <div class="_"> <b class="_" title="缩小"></b>
+                </div>
+                <div class="x"> <b class="x" title="关闭"></b>
+                </div>
+                <div style="clear:both"></div>
+            </div>
+
+            <input type="text" placeholder="起个昵称" />
+        </div>
+        <div class="bottom_half">
+            <input type="button" value="进入聊天室" onclick="login()" />
+            <div> © Gaofei Yang</div>
+        </div>
+
+    </div>
+</body>
+
+</html>
