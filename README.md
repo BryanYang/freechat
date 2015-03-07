@@ -9,7 +9,7 @@ nodejs 的一个聊天软件，类似微信。
 - socket.io 客户端与服务器进行通讯。
 - html5, css3 , js 客户端开发语言。
 
-![Alt text](https://github.com/BryanYang/freechat/blob/master/img/pic1.jpg)
+![img](https://github.com/BryanYang/freechat/blob/master/img/pic1.jpg)
 
 
 ## 运行前，请先下载 nw.js 。地址：[nw首页](http://nwjs.io/)
